@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+
+//kill -s SIGUSR1 73248
 func main() {
 	fmt.Println("hello from beat 1")
 	sigintChan:= make(chan os.Signal)
