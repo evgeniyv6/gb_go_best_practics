@@ -1,5 +1,4 @@
 // образец https://github.com/sony/gobreaker (thanks google halfopen search)
-
 package main
 
 import (
