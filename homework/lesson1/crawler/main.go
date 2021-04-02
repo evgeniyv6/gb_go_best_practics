@@ -14,6 +14,7 @@ const (
 	errLimit = 100000
 	resLimit = 10000
 	timeout time.Duration = 1 * time.Second
+	incNum = 10
 )
 
 var (
@@ -55,12 +56,12 @@ func main() {
 func watchSignals(cancel context.CancelFunc, cr *crawler) {
 	osSignalChan := make(chan os.Signal)
 	signal.Notify(osSignalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGUSR1)
-	for {
+	for {  // задание №1
 		sig := <-osSignalChan
 		switch sig {
 		case syscall.SIGUSR1:
 			log.Println("increased by 10")
-			cr.maxDepth += 10
+			cr.maxDepth += incNum
 		case syscall.SIGINT, syscall.SIGTERM:
 			log.Printf("got signal %q", sig.String())
 			cancel()
