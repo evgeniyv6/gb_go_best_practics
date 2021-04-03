@@ -20,7 +20,7 @@ func myFilesHasher(done <-chan interface{}, files...string) <-chan res {
 			select {
 			case <- done:
 				return
-				case resCh<-result:
+			case resCh<-result:
 			}
 		}
 	}()
