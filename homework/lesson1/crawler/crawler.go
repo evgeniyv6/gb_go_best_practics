@@ -35,9 +35,11 @@ func (c *crawler) run(ctx context.Context, url string, res chan <- crawlRes, dep
 	case <-ctx.Done():
 		return
 	default:
+		c.Lock()
 		if depth >= c.maxDepth {
 			return
 		}
+		c.Unlock()
 
 		page, err := parse(ctxDeadline, url)
 
@@ -64,7 +66,9 @@ func (c *crawler) run(ctx context.Context, url string, res chan <- crawlRes, dep
 			if c.checkVisited(l) {
 				continue
 			}
+			c.Lock()
 			depth++  // !! иначе depth >= c.maxDepth всегда true
+			c.Unlock()
 			go c.run(ctx,l, res,depth)
 		}
 
