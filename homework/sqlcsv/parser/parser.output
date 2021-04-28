@@ -1,0 +1,560 @@
+
+state 0
+	$accept: .stmnt $end 
+	stmnt: .    (1)
+
+	SELECT  shift 6
+	.  reduce 1 (src line 56)
+
+	stmnt  goto 1
+	statement  goto 2
+	expression  goto 3
+	select_req  goto 4
+	select_expr  goto 5
+
+state 1
+	$accept:  stmnt.$end 
+
+	$end  accept
+	.  error
+
+
+state 2
+	stmnt:  statement.stmnt 
+	stmnt: .    (1)
+
+	SELECT  shift 6
+	.  reduce 1 (src line 56)
+
+	stmnt  goto 7
+	statement  goto 2
+	expression  goto 3
+	select_req  goto 4
+	select_expr  goto 5
+
+state 3
+	statement:  expression.statement_terminal 
+	statement_terminal: .    (41)
+
+	';'  shift 9
+	.  reduce 41 (src line 269)
+
+	statement_terminal  goto 8
+
+state 4
+	expression:  select_req.    (4)
+
+	.  reduce 4 (src line 74)
+
+
+state 5
+	select_req:  select_expr.from_expr where_expr limit_expr 
+	from_expr: .    (7)
+
+	FROM  shift 11
+	.  reduce 7 (src line 97)
+
+	from_expr  goto 10
+
+state 6
+	select_expr:  SELECT.fields 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'*'  shift 16
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 15
+	comparison  goto 19
+	logic  goto 20
+	field_object  goto 14
+	field  goto 13
+	fields  goto 12
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 7
+	stmnt:  statement stmnt.    (2)
+
+	.  reduce 2 (src line 62)
+
+
+state 8
+	statement:  expression statement_terminal.    (3)
+
+	.  reduce 3 (src line 68)
+
+
+state 9
+	statement_terminal:  ';'.    (42)
+
+	.  reduce 42 (src line 274)
+
+
+state 10
+	select_req:  select_expr from_expr.where_expr limit_expr 
+	where_expr: .    (9)
+
+	WHERE  shift 33
+	.  reduce 9 (src line 107)
+
+	where_expr  goto 32
+
+state 11
+	from_expr:  FROM.tables 
+
+	ID  shift 23
+	.  error
+
+	table  goto 35
+	tables  goto 34
+	identifier  goto 36
+
+state 12
+	select_expr:  SELECT fields.    (6)
+
+	.  reduce 6 (src line 91)
+
+
+state 13
+	fields:  field.    (32)
+	fields:  field.',' fields 
+
+	','  shift 37
+	.  reduce 32 (src line 219)
+
+
+state 14
+	field:  field_object.    (29)
+
+	.  reduce 29 (src line 203)
+
+
+state 15
+	comparison:  value.COMPARISON_OP value 
+	logic:  value.OR value 
+	logic:  value.AND value 
+	field_object:  value.    (27)
+
+	AND  shift 40
+	OR  shift 39
+	COMPARISON_OP  shift 38
+	.  reduce 27 (src line 193)
+
+
+state 16
+	field_object:  '*'.    (28)
+
+	.  reduce 28 (src line 198)
+
+
+state 17
+	value:  identifier.    (16)
+
+	.  reduce 16 (src line 141)
+
+
+state 18
+	value:  prime.    (17)
+
+	.  reduce 17 (src line 146)
+
+
+state 19
+	value:  comparison.    (18)
+
+	.  reduce 18 (src line 150)
+
+
+state 20
+	value:  logic.    (19)
+
+	.  reduce 19 (src line 154)
+
+
+state 21
+	value:  variable.    (20)
+
+	.  reduce 20 (src line 158)
+
+
+state 22
+	value:  '('.value ')' 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 41
+	comparison  goto 19
+	logic  goto 20
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 23
+	identifier:  ID.    (34)
+
+	.  reduce 34 (src line 229)
+
+
+state 24
+	prime:  text.    (13)
+
+	.  reduce 13 (src line 127)
+
+
+state 25
+	prime:  integer.    (14)
+
+	.  reduce 14 (src line 132)
+
+
+state 26
+	prime:  float.    (15)
+
+	.  reduce 15 (src line 136)
+
+
+state 27
+	variable:  VARIABLE.    (40)
+
+	.  reduce 40 (src line 263)
+
+
+state 28
+	text:  STRING.    (35)
+
+	.  reduce 35 (src line 235)
+
+
+state 29
+	integer:  INTEGER.    (36)
+
+	.  reduce 36 (src line 241)
+
+
+state 30
+	integer:  '-'.integer 
+	float:  '-'.float 
+
+	INTEGER  shift 29
+	FLOAT  shift 31
+	'-'  shift 30
+	.  error
+
+	integer  goto 42
+	float  goto 43
+
+state 31
+	float:  FLOAT.    (38)
+
+	.  reduce 38 (src line 252)
+
+
+state 32
+	select_req:  select_expr from_expr where_expr.limit_expr 
+	limit_expr: .    (11)
+
+	LIMIT  shift 45
+	.  reduce 11 (src line 117)
+
+	limit_expr  goto 44
+
+state 33
+	where_expr:  WHERE.value 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 46
+	comparison  goto 19
+	logic  goto 20
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 34
+	from_expr:  FROM tables.    (8)
+
+	.  reduce 8 (src line 102)
+
+
+state 35
+	tables:  table.    (30)
+	tables:  table.',' tables 
+
+	','  shift 47
+	.  reduce 30 (src line 209)
+
+
+state 36
+	table:  identifier.    (25)
+	table:  identifier.identifier 
+
+	ID  shift 23
+	.  reduce 25 (src line 183)
+
+	identifier  goto 48
+
+state 37
+	fields:  field ','.fields 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'*'  shift 16
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 15
+	comparison  goto 19
+	logic  goto 20
+	field_object  goto 14
+	field  goto 13
+	fields  goto 49
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 38
+	comparison:  value COMPARISON_OP.value 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 50
+	comparison  goto 19
+	logic  goto 20
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 39
+	logic:  value OR.value 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 51
+	comparison  goto 19
+	logic  goto 20
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 40
+	logic:  value AND.value 
+
+	ID  shift 23
+	STRING  shift 28
+	INTEGER  shift 29
+	FLOAT  shift 31
+	VARIABLE  shift 27
+	'-'  shift 30
+	'('  shift 22
+	.  error
+
+	prime  goto 18
+	value  goto 52
+	comparison  goto 19
+	logic  goto 20
+	identifier  goto 17
+	text  goto 24
+	integer  goto 25
+	float  goto 26
+	variable  goto 21
+
+state 41
+	value:  '(' value.')' 
+	comparison:  value.COMPARISON_OP value 
+	logic:  value.OR value 
+	logic:  value.AND value 
+
+	AND  shift 40
+	OR  shift 39
+	COMPARISON_OP  shift 38
+	')'  shift 53
+	.  error
+
+
+state 42
+	integer:  '-' integer.    (37)
+
+	.  reduce 37 (src line 246)
+
+
+state 43
+	float:  '-' float.    (39)
+
+	.  reduce 39 (src line 257)
+
+
+state 44
+	select_req:  select_expr from_expr where_expr limit_expr.    (5)
+
+	.  reduce 5 (src line 80)
+
+
+state 45
+	limit_expr:  LIMIT.integer 
+
+	INTEGER  shift 29
+	'-'  shift 55
+	.  error
+
+	integer  goto 54
+
+state 46
+	where_expr:  WHERE value.    (10)
+	comparison:  value.COMPARISON_OP value 
+	logic:  value.OR value 
+	logic:  value.AND value 
+
+	AND  shift 40
+	OR  shift 39
+	COMPARISON_OP  shift 38
+	.  reduce 10 (src line 112)
+
+
+state 47
+	tables:  table ','.tables 
+
+	ID  shift 23
+	.  error
+
+	table  goto 35
+	tables  goto 56
+	identifier  goto 36
+
+state 48
+	table:  identifier identifier.    (26)
+
+	.  reduce 26 (src line 188)
+
+
+state 49
+	fields:  field ',' fields.    (33)
+
+	.  reduce 33 (src line 224)
+
+
+state 50
+	comparison:  value.COMPARISON_OP value 
+	comparison:  value COMPARISON_OP value.    (22)
+	logic:  value.OR value 
+	logic:  value.AND value 
+
+	.  reduce 22 (src line 167)
+
+
+state 51
+	comparison:  value.COMPARISON_OP value 
+	logic:  value.OR value 
+	logic:  value OR value.    (23)
+	logic:  value.AND value 
+
+	AND  shift 40
+	COMPARISON_OP  shift 38
+	.  reduce 23 (src line 173)
+
+
+state 52
+	comparison:  value.COMPARISON_OP value 
+	logic:  value.OR value 
+	logic:  value.AND value 
+	logic:  value AND value.    (24)
+
+	COMPARISON_OP  shift 38
+	.  reduce 24 (src line 178)
+
+
+state 53
+	value:  '(' value ')'.    (21)
+
+	.  reduce 21 (src line 162)
+
+
+state 54
+	limit_expr:  LIMIT integer.    (12)
+
+	.  reduce 12 (src line 122)
+
+
+state 55
+	integer:  '-'.integer 
+
+	INTEGER  shift 29
+	'-'  shift 55
+	.  error
+
+	integer  goto 42
+
+state 56
+	tables:  table ',' tables.    (31)
+
+	.  reduce 31 (src line 214)
+
+
+26 terminals, 24 nonterminals
+43 grammar rules, 57/16000 states
+0 shift/reduce, 0 reduce/reduce conflicts reported
+73 working sets used
+memory: parser 103/240000
+14 extra closures
+82 shift entries, 1 exceptions
+38 goto entries
+56 entries saved by goto default
+Optimizer space used: output 76/240000
+76 table entries, 0 zero
+maximum spread: 26, maximum offset: 55
