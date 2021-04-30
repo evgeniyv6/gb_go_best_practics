@@ -14,8 +14,8 @@ import (
 
 const (
 	timeout = 10 * time.Millisecond
-	addr = "127.0.0.1:5433"
-	count = 250
+	addr    = "127.0.0.1:5433"
+	count   = 250
 )
 
 var logger, _ = zap.NewProduction()
@@ -39,9 +39,9 @@ func main() {
 
 	logger = logger.With(zap.String("name", "Circuit Breaker"))
 
-	orders := make([]string,0)
-	for i:=0; i < count;i++ {
-		orders = append(orders, StandartRand(1,100))
+	orders := make([]string, 0)
+	for i := 0; i < count; i++ {
+		orders = append(orders, StandartRand(1, 100))
 	}
 
 	cb := NewDefaultCB()
@@ -49,10 +49,10 @@ func main() {
 
 	for _, order := range orders {
 		err := cb.Exec(pay(order))
-		time.Sleep(1*time.Second)
-	if err != nil {
-		logger.Error(fmt.Sprintf("%v", err))
-	}
+		time.Sleep(1 * time.Second)
+		if err != nil {
+			logger.Error(fmt.Sprintf("%v", err))
+		}
 	}
 
 }

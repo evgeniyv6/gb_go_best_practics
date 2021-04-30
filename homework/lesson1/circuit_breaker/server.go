@@ -40,5 +40,3 @@ func processPayment(lis net.Listener) error {
 	}
 	return nil
 }
-
-

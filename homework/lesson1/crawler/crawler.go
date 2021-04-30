@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -15,19 +14,19 @@ type crawlRes struct {
 
 type crawler struct {
 	sync.Mutex
-	visited map[string]string
+	visited  map[string]string
 	maxDepth int
 }
 
 func newCrawler(maxDepth int) *crawler {
 	return &crawler{
-		visited: make(map[string]string),
+		visited:  make(map[string]string),
 		maxDepth: maxDepth,
 	}
 }
 
-func (c *crawler) run(ctx context.Context, url string, res chan <- crawlRes, depth int) {
-	time.Sleep(2*time.Second)
+func (c *crawler) run(ctx context.Context, url string, res chan<- crawlRes, depth int) {
+	time.Sleep(2 * time.Second)
 	ctxDeadline, cancelFunc := context.WithDeadline(context.Background(), time.Now().Add(timeout)) // для задания №2
 	defer cancelFunc()
 
@@ -45,7 +44,7 @@ func (c *crawler) run(ctx context.Context, url string, res chan <- crawlRes, dep
 
 		if err != nil {
 			res <- crawlRes{
-				err: errors.New(fmt.Sprintf("err: %v when parse - %s", err, page)),
+				err: fmt.Errorf("err: %v when parse - %v", err, page),
 			}
 			return
 		}
@@ -67,9 +66,9 @@ func (c *crawler) run(ctx context.Context, url string, res chan <- crawlRes, dep
 				continue
 			}
 			c.Lock()
-			depth++  // !! иначе depth >= c.maxDepth всегда true
+			depth++ // !! иначе depth >= c.maxDepth всегда true
 			c.Unlock()
-			go c.run(ctx,l, res,depth)
+			go c.run(ctx, l, res, depth)
 		}
 
 	}

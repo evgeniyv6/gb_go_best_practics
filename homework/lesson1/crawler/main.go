@@ -11,20 +11,19 @@ import (
 )
 
 const (
-	errLimit = 100000
-	resLimit = 10000
-	timeout time.Duration = 1 * time.Second
-	incNum = 10
+	errLimit               = 100000
+	resLimit               = 10000
+	timeout  time.Duration = 1 * time.Second
+	incNum                 = 10
 )
 
 var (
-	url string
+	url        string
 	depthLimit int
 )
 
-
 func init() {
-	flag.StringVar(&url,"url","", "url address")
+	flag.StringVar(&url, "url", "", "url address")
 	flag.IntVar(&depthLimit, "depth", 3, "max depth for run")
 	flag.Parse()
 
@@ -46,7 +45,7 @@ func main() {
 
 	res := make(chan crawlRes)
 	done := watchCrawler(ctx, res, errLimit, resLimit)
-	crawler.run(ctx, url,res,0)
+	crawler.run(ctx, url, res, 0)
 
 	<-done
 	log.Println(time.Since(started))
@@ -54,9 +53,9 @@ func main() {
 }
 
 func watchSignals(cancel context.CancelFunc, cr *crawler) {
-	osSignalChan := make(chan os.Signal)
+	osSignalChan := make(chan os.Signal, 10)
 	signal.Notify(osSignalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGUSR1)
-	for {  // задание №1
+	for { // задание №1
 		sig := <-osSignalChan
 		switch sig {
 		case syscall.SIGUSR1:
@@ -69,16 +68,16 @@ func watchSignals(cancel context.CancelFunc, cr *crawler) {
 	}
 }
 
-func watchCrawler(ctx context.Context, res <- chan crawlRes, maxErr, maxRes int) chan struct{} {
+func watchCrawler(ctx context.Context, res <-chan crawlRes, maxErr, maxRes int) chan struct{} {
 	readersDone := make(chan struct{})
 
 	go func() {
 		defer close(readersDone)
 		for {
 			select {
-			case <- ctx.Done():
+			case <-ctx.Done():
 				return
-			case r := <- res:
+			case r := <-res:
 				if r.err != nil {
 					maxErr--
 					if maxErr <= 0 {
